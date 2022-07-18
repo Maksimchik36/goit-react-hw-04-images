@@ -1,9 +1,19 @@
+import { Component } from "react";
 import { Container } from "./App.styled";
+import Searchbar from "components/Searchbar";
+import ImageGallery from "components/ImageGallery";
 
-export const App = () => {
-  return (
-    <Container>
-      React homework template
-    </Container>
+class App extends Component {
+  render() {
+    return (
+      <Container>        
+        <Searchbar onSubmit> </Searchbar>
+        <ImageGallery>  </ImageGallery>
+        
+      </Container>
   );
+  }
 };
+
+
+export default App;
