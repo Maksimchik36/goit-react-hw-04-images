@@ -11,7 +11,8 @@ axios.defaults.params = {
 
 export const getImages = async (query, page) => {
   const {data} = await axios.get(`search?query=${query}&page=${page}`);
-  return data;
+  // await axios.get(`https://pixabay.com/api/?q=${query}&${page}=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`)
+   return data;
 };
 
 // `https://pixabay.com/api/?q=cat&page=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
