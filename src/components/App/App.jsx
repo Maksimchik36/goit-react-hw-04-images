@@ -2,14 +2,15 @@ import { Component } from "react";
 import { Container } from "./App.styled";
 import Searchbar from "components/Searchbar";
 import ImageGallery from "components/ImageGallery";
+import ImageGalleryItem from "components/ImageGalleryItem";
 import * as ImageService from '../../service/image-service';
 
 class App extends Component {
   state = {
     query: '',
-    images: [],
+    images: [], 
     page: 1,
-    // isEmpty: false,
+    isEmpty: false, // пустой ли массив получаем при запросе
     // isVisible: false,
     // isLoading: false,
     // error: null,
@@ -32,8 +33,27 @@ class App extends Component {
     }
 
     try{
-     const data = await ImageService.getImages(query, page);
-     console.log("app data", data);
+      const { hits } = await ImageService.getImages(query, page);
+      if (hits.length === 0) {
+        this.setState({ isEmpty: true });
+        console.log("isEmpty: true");
+        return;
+      }
+
+      this.setState(prevState => ({
+        images: [...prevState.images, ...hits]
+      }))
+
+      // const result = hits.map(element => {
+      //   return {
+      //     id: element.id,
+      //     webformatURL: element.webformatURL,
+      //     largeImageURL: element.largeImageURL,
+      //   }
+      // })
+      //         console.log("result", result);
+
+      // return result;
     }
     catch(error){
       console.log("error", error.message);
@@ -49,12 +69,17 @@ class App extends Component {
   }
 
   render() {
-    const result = ImageService.getImages("cat");
-    console.log(result);
+    const {isEmpty} = this.state;
+
     return (
       <Container>        
         <Searchbar onSubmit={this.onSubmit}> </Searchbar>
-        <ImageGallery>  </ImageGallery>
+        {isEmpty && <>Sorry. There are no images ... 😭</>}
+        <ImageGallery>
+          <ImageGalleryItem>
+            
+           </ImageGalleryItem>
+         </ImageGallery>
         
       </Container>
   );
