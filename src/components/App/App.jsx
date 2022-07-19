@@ -69,16 +69,18 @@ class App extends Component {
   }
 
   render() {
-    const {isEmpty} = this.state;
+    const {isEmpty, images} = this.state;
 
     return (
       <Container>        
         <Searchbar onSubmit={this.onSubmit}> </Searchbar>
         {isEmpty && <>Sorry. There are no images ... 😭</>}
-        <ImageGallery>
-          <ImageGalleryItem>
-            
-           </ImageGalleryItem>
+        <ImageGallery>{
+          images.map(({id, webformatURL, tags, largeImageURL}) => {return <ImageGalleryItem 
+            key={id}
+            src={webformatURL}
+            alt={tags}            
+            ></ImageGalleryItem> })}         
          </ImageGallery>
         
       </Container>

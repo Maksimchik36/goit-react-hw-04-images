@@ -1,9 +1,10 @@
 import { ImageGalleryItemSt, ImageGalleryItemImageSt } from './ImageGalleryItem.styled';
 
-const ImageGalleryItem = () => {
-    return (
+const ImageGalleryItem = (webformatURL, tags) => {
+    
+    return ( 
         <ImageGalleryItemSt>
-           <ImageGalleryItemImageSt src="" alt="" />
+           <ImageGalleryItemImageSt src={webformatURL} alt={tags} />
         </ImageGalleryItemSt>
     )
 }
