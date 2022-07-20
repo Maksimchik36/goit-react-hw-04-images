@@ -1,11 +1,11 @@
 
 import { OverlaySt, ModalSt } from './Modal.styled';
 
-const Modal = () => {
+const Modal = ({image, onClose}) => {
     return (
         <OverlaySt>
-  <ModalSt class="modal">
-    <img src="" alt="" />
+  <ModalSt>
+    <img src={image} alt="" />
   </ModalSt>
 </OverlaySt>
     )
