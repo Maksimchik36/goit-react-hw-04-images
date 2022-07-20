@@ -3,6 +3,8 @@ import { Container } from "./App.styled";
 import Searchbar from "components/Searchbar";
 import ImageGallery from "components/ImageGallery";
 import Button from "components/Button";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import { BallTriangle } from 'react-loader-spinner';
 import * as ImageService from '../../service/image-service';
 
 class App extends Component {
@@ -32,6 +34,7 @@ class App extends Component {
       console.log("Введите Ваш запрос");
       return;
     }
+    this.setState({isLoading:true})
 
     try {
       const {totalHits, hits}  = await ImageService.getImages(query, page);
@@ -62,6 +65,9 @@ class App extends Component {
       this.setState({error: error.message})
       console.log("error", error.message);
     }
+    finally{
+      this.setState({isLoading:false})
+    }
   }
 
 
@@ -71,6 +77,7 @@ class App extends Component {
       images:[],
       page: 1,
       isEmpty: false,
+      isVisible: false,
       })
   }
 
@@ -79,7 +86,7 @@ class App extends Component {
   }
 
   render() {
-    const { isEmpty, images, isVisible, error } = this.state;
+    const { isEmpty, images, isVisible, error, isLoading } = this.state;
 
     return (
       <Container>        
@@ -89,7 +96,8 @@ class App extends Component {
         <ImageGallery
             images={images}>         
         </ImageGallery>
-        {isVisible && <Button text="Load More" onClick={this.onLoadMoreBtnClick}></Button>}
+        {isVisible && <Button message="Load More" onClick={this.onLoadMoreBtnClick}></Button>}
+        {isLoading && <BallTriangle color="#00BFFF" height={80} width={80} />}
         
       </Container>
   );
