@@ -29,11 +29,13 @@ class App extends Component {
   }
 
 
+  // получение коллекции элементов
   getPhotos = async (query, page) => {
     if(!query){
       console.log("Введите Ваш запрос");
       return;
     }
+    // начало загрузки
     this.setState({isLoading:true})
 
     try {
@@ -63,13 +65,16 @@ class App extends Component {
     }
     catch (error) {
       this.setState({error: error.message})
-      console.log("error", error.message);
     }
-    finally{
+    finally {
+      // завершение загрузки
       this.setState({isLoading:false})
     }
   }
 
+  onClick = (e) => {
+    console.log("e.target", e.target);
+  }
 
   onSubmit = (query) => {
     this.setState({
@@ -81,9 +86,11 @@ class App extends Component {
       })
   }
 
+
   onLoadMoreBtnClick = () => {
    this.setState(prevState => ({page: prevState.page + 1}))    
   }
+
 
   render() {
     const { isEmpty, images, isVisible, error, isLoading } = this.state;
@@ -92,11 +99,16 @@ class App extends Component {
       <Container>        
         <Searchbar onSubmit={this.onSubmit}> </Searchbar>
         {isEmpty && <>Sorry. There are no images ... 😭</>}
+        
         {error && <>❌ Something went wrong - {error}</>}
+        
         <ImageGallery
+            onClick={this.onClick}
             images={images}>         
         </ImageGallery>
+        
         {isVisible && <Button message="Load More" onClick={this.onLoadMoreBtnClick}></Button>}
+        
         {isLoading && <BallTriangle color="#00BFFF" height={80} width={80} />}
         
       </Container>
