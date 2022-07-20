@@ -1,8 +1,15 @@
 import { ImageGallerySt } from "./ImageGallery.styled";
+import ImageGalleryItem from "components/ImageGalleryItem";
 
-const ImageGallery = () => {
+const ImageGallery = ({ images }) => {
     return (
-        <ImageGallerySt>
+        <ImageGallerySt>{
+          images.map(({id, webformatURL, tags, largeImageURL}) => {return <ImageGalleryItem 
+            key={id}
+            picture={webformatURL}
+            comment={tags}            
+            ></ImageGalleryItem> })}
+
         </ImageGallerySt>
     )
 }
