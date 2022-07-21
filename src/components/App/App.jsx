@@ -7,6 +7,7 @@ import Modal from "components/Modal";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 // import { BallTriangle } from 'react-loader-spinner';
 import Loader from "components/Loader";
+import ErrorMessage from '../ErrorMessage';
 import * as ImageService from '../../service/image-service';
 
 class App extends Component {
@@ -53,12 +54,10 @@ class App extends Component {
       this.setState(prevState => ({
         images: [...prevState.images, ...hits],
         isVisible: Math.ceil(totalHits/hits.length) > page,
-
-      }))
-      
+        }))      
     }
     catch (error) {
-      this.setState({error: error.message})
+      this.setState({error: error})
     }
     finally {
       // завершение загрузки
@@ -66,7 +65,7 @@ class App extends Component {
     }
   }
 
-  // перезаписывает значение state в App
+  // перезаписывает значение query в state (App)
   onSubmit = (query) => {
     this.setState({
       query,
@@ -82,17 +81,18 @@ class App extends Component {
    this.setState(prevState => ({page: prevState.page + 1}))    
   }
 
-  // при нажатии на картинку возвращает объект данных выбранной картинки  
+  // при нажатии на картинку записывает в state webformatURL значение свойства элемента webformatURL   
   onImageClick = (e) => {
     const selectedImageSrc = e.target.src;
-    const selectedImage = this.state.images.find(el=>el.webformatURL === selectedImageSrc);
+    const {images} = this.state;
+    const selectedImage = images.find(el=>el.webformatURL === selectedImageSrc);
     this.setState({
       largeImageURL: selectedImage.largeImageURL,
       isModalShown: true,
     })
  }
 
-  // закрывает модалку благодаря
+  // записывает значение isModalShown: false в state, благодаря чему будет закрываться модалка
   onModalClose = () => {
     this.setState( {isModalShown: false})
  }
@@ -103,9 +103,10 @@ class App extends Component {
     return (
       <Container>        
         <Searchbar onSubmit={this.onSubmit}> </Searchbar>
-        {isEmpty && <>Sorry. There are no images ... 😭</>}
         
-        {error && <>❌ Something went wrong - {error}</>}
+        {isEmpty && <ErrorMessage text="Sorry. There are no images ... 😭" link="https://www.meme-arsenal.com/memes/6701390fa09401b5b6a3cdb3b90ce39e.jpg"></ErrorMessage>}
+        
+        {error && <ErrorMessage text="❌ Something went wrong ..." link="https://static6.depositphotos.com/1026266/543/i/600/depositphotos_5437053-stock-photo-woman-pressing-modern-error-button.jpg" ></ErrorMessage>}
         
         <ImageGallery
             onClick={this.onImageClick}
