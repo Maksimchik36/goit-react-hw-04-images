@@ -37,8 +37,7 @@ class App extends Component {
   // получение коллекции элементов
   getPhotos = async (query, page) => {
     if(!query){
-      console.log("Введите Ваш запрос");
-      return;
+         return ;
     }
     // начало загрузки
     this.setState({isLoading:true})
@@ -47,7 +46,9 @@ class App extends Component {
       const {totalHits, hits}  = await ImageService.getImages(query, page);
       
       if (hits.length === 0) {
-        this.setState({ isEmpty: true });
+        this.setState({ isEmpty: true,
+          query:'',
+         });
         return;
       }
       
@@ -99,14 +100,16 @@ class App extends Component {
 
   render() {
     const { isEmpty, images, isVisible, error, isLoading, largeImageURL, isModalShown } = this.state;
+    const EmptyLink="https://www.meme-arsenal.com/memes/6701390fa09401b5b6a3cdb3b90ce39e.jpg";
+    const ImageError = "https://static6.depositphotos.com/1026266/543/i/600/depositphotos_5437053-stock-photo-woman-pressing-modern-error-button.jpg";
 
     return (
       <Container>        
         <Searchbar onSubmit={this.onSubmit}> </Searchbar>
         
-        {isEmpty && <ErrorMessage text="Sorry. There are no images ... 😭" link="https://www.meme-arsenal.com/memes/6701390fa09401b5b6a3cdb3b90ce39e.jpg"></ErrorMessage>}
+        {isEmpty && <ErrorMessage text="Sorry. There are no images ... 😭" link={EmptyLink}></ErrorMessage>}
         
-        {error && <ErrorMessage text="❌ Something went wrong ..." link="https://static6.depositphotos.com/1026266/543/i/600/depositphotos_5437053-stock-photo-woman-pressing-modern-error-button.jpg" ></ErrorMessage>}
+        {error && <ErrorMessage text="❌ Something went wrong ..." link={ImageError} ></ErrorMessage>}
         
         <ImageGallery
             onClick={this.onImageClick}

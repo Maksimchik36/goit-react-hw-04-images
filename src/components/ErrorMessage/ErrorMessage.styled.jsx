@@ -10,7 +10,7 @@ align-items: center;
 
 export const ErrorMessageImageSt = styled.img`
 display: block;
-max-width: 600px;
+width: 600px;
 `;
 
 export const ErrorMessageTextSt = styled.p`

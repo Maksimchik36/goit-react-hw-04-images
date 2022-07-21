@@ -18,6 +18,11 @@ class Searchbar extends Component{
   handleSubmit = (e) => {
     e.preventDefault();
     const {query} = this.state;
+    
+    if(!query){
+      alert ("Введите Ваш запрос");
+    }
+
     this.props.onSubmit(query); // вызов ф-и из App
     this.setState({query: ''})   
   }
