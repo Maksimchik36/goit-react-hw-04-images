@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'; 
 import React, { Component } from "react";
-import { SearchbarSt, SearchFormSt, SearchFormButtonSt, SearchFormSpanLabelSt, SearchFormInputSt } from './Searchbar.styled';
+import { FcSearch } from 'react-icons/fc';
+import { SearchbarSt, SearchFormSt, SearchFormButtonSt, SearchFormInputSt } from './Searchbar.styled';
 
 class Searchbar extends Component{
   state = {
@@ -18,7 +19,7 @@ class Searchbar extends Component{
     e.preventDefault();
     const {query} = this.state;
     this.props.onSubmit(query); // вызов ф-и из App
-    this.setState({query: ''})
+    this.setState({query: ''})   
   }
 
 
@@ -28,7 +29,7 @@ class Searchbar extends Component{
             <SearchbarSt>
                 <SearchFormSt onSubmit={this.handleSubmit}>
                     <SearchFormButtonSt type="submit">
-                      <SearchFormSpanLabelSt >Search</SearchFormSpanLabelSt>
+                      <FcSearch style={{height: "2em", width: "2em",}}/>
                     </SearchFormButtonSt>
 
                     <SearchFormInputSt

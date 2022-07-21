@@ -5,7 +5,8 @@ import ImageGallery from "components/ImageGallery";
 import Button from "components/Button";
 import Modal from "components/Modal";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import { BallTriangle } from 'react-loader-spinner';
+// import { BallTriangle } from 'react-loader-spinner';
+import Loader from "components/Loader";
 import * as ImageService from '../../service/image-service';
 
 class App extends Component {
@@ -17,7 +18,7 @@ class App extends Component {
     isVisible: false, // видимость Button LoadMore
     isLoading: false, // для визуализации загрузки - спинера
     error: null, // сообщение об ошибке - в catch
-    isModalShown: false,
+    isModalShown: false, // отображение модалки
     largeImageURL: '', // картинка для модалки
   };
 
@@ -113,7 +114,7 @@ class App extends Component {
         
         {isVisible && <Button type ="button" message="Load More" onClick={this.onLoadMoreBtnClick}></Button>}
         
-        {isLoading && <BallTriangle color="#00BFFF" height={80} width={80} />}
+        {isLoading && <Loader/>}
 
         {largeImageURL && isModalShown && <Modal onClose={this.onModalClose} >{largeImageURL}</Modal>}
         

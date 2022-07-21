@@ -19,4 +19,5 @@ export const ModalSt = styled.div`
 `;
 
 export const ModalImageSt = styled.img`
+display: block;
 max-width: 1000px;`
