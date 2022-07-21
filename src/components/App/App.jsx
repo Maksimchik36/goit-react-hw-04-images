@@ -17,6 +17,7 @@ class App extends Component {
     isVisible: false, // видимость Button LoadMore
     isLoading: false, // для визуализации загрузки - спинера
     error: null, // сообщение об ошибке - в catch
+    isModalShown: false,
     largeImageURL: '', // картинка для модалки
   };
 
@@ -85,15 +86,18 @@ class App extends Component {
   onImageClick = (e) => {
     const selectedImageSrc = e.target.src;
     const selectedImage = this.state.images.find(el=>el.webformatURL === selectedImageSrc);
-    this.setState({largeImageURL: selectedImage.largeImageURL})
+    this.setState({
+      largeImageURL: selectedImage.largeImageURL,
+      isModalShown: true,
+    })
  }
 
- onModalClose = (e) => {
-  console.log(e.target);
+  onModalClose = () => {
+    this.setState( {isModalShown: false})
  }
 
   render() {
-    const { isEmpty, images, isVisible, error, isLoading, largeImageURL } = this.state;
+    const { isEmpty, images, isVisible, error, isLoading, largeImageURL, isModalShown } = this.state;
 
     return (
       <Container>        
@@ -107,11 +111,11 @@ class App extends Component {
             images={images}>         
         </ImageGallery>
         
-        {isVisible && <Button message="Load More" onClick={this.onLoadMoreBtnClick}></Button>}
+        {isVisible && <Button type ="button" message="Load More" onClick={this.onLoadMoreBtnClick}></Button>}
         
         {isLoading && <BallTriangle color="#00BFFF" height={80} width={80} />}
 
-        {largeImageURL && <Modal image={this.state.largeImageURL} onClose={this.onModalClose} ></Modal>}
+        {largeImageURL && isModalShown && <Modal onClose={this.onModalClose} >{largeImageURL}</Modal>}
         
       </Container>
   );
