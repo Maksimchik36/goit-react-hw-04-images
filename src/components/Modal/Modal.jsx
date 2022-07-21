@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'; 
 import React, { Component } from "react";
 import { OverlaySt, ModalSt, ModalImageSt } from './Modal.styled';
 import { createPortal } from "react-dom";
@@ -16,9 +17,9 @@ export default class Modal extends Component{
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 
+  
   // закрытие модалки по нажатию на escape
   handleKeyDown = (e) => {
-
       if (e.code === 'Escape') {
         this.props.onClose();
       }
@@ -43,9 +44,9 @@ export default class Modal extends Component{
 }
 
 
-
-
-
+Modal.propTypes = {
+  onClose: PropTypes.func.isRequired,  
+}
 
 
 // import { OverlaySt, ModalSt, ModalImageSt } from './Modal.styled';

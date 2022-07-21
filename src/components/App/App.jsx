@@ -46,7 +46,6 @@ class App extends Component {
       
       if (hits.length === 0) {
         this.setState({ isEmpty: true });
-        console.log("isEmpty: true");
         return;
       }
       
@@ -92,6 +91,7 @@ class App extends Component {
     })
  }
 
+  // закрывает модалку благодаря
   onModalClose = () => {
     this.setState( {isModalShown: false})
  }

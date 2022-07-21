@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'; 
 import { ImageGallerySt } from "./ImageGallery.styled";
 import ImageGalleryItem from "components/ImageGalleryItem";
 
@@ -14,5 +15,13 @@ const ImageGallery = ({ images, onClick }) => {
         </ImageGallerySt>
     )
 }
+
+
+ImageGallery.propTypes = {
+    images: PropTypes.arrayOf(PropTypes.shape(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,]).isRequired).isRequired).isRequired,
+}
+
 
 export default ImageGallery;
