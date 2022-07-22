@@ -20,4 +20,4 @@ export const ModalSt = styled.div`
 
 export const ModalImageSt = styled.img`
 display: block;
-min-width: 300px;`
+max-width: 100%;`
