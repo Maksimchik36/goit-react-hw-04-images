@@ -1,44 +1,42 @@
 import PropTypes from 'prop-types'; 
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { FcSearch } from 'react-icons/fc';
 import { SearchbarSt, SearchFormSt, SearchFormButtonSt, SearchFormInputSt } from './Searchbar.styled';
 
-class Searchbar extends Component{
-  state = {
-    query: '',
-  }
+const Searchbar = ({onSubmit}) => {
+  
+  const [query, setQuery] = useState('');
 
-  // записывает введённое значение в this.state.query в Searchbar
-  handleInput = (e) => {
+
+  // записывает введённое значение в query в Searchbar
+  const handleInput = (e) => {
     const {value} = e.currentTarget;
-    this.setState({query: value.trim().toLowerCase()})
+    setQuery(value.trim().toLowerCase())
   }
 
-  // вызывается ф-я onSubmit из App и записывается значение из this.state.query (Searchbar) - в this.state.query (App)
-  handleSubmit = (e) => {
+
+  // вызывается ф-я onSubmit из App и записывается значение из query (Searchbar) - в query (App)
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const {query} = this.state;
-    
+        
     if(!query){
       alert ("Введите Ваш запрос");
     }
 
-    this.props.onSubmit(query); // вызов ф-и из App
-    this.setState({query: ''})   
+    onSubmit(query); // вызов ф-и из App
+    setQuery('');   
   }
 
-
-    render() {
-      const {query} = this.state;
+  
         return (
             <SearchbarSt>
-                <SearchFormSt onSubmit={this.handleSubmit}>
+                <SearchFormSt onSubmit={handleSubmit}>
                     <SearchFormButtonSt type="submit">
                       <FcSearch style={{height: "2em", width: "2em",}}/>
                     </SearchFormButtonSt>
 
                     <SearchFormInputSt
-                      onChange = {this.handleInput}
+                      onChange = {handleInput}
                       value = {query}
                       type="text"
                       autoComplete="off"
@@ -48,8 +46,6 @@ class Searchbar extends Component{
                  </SearchFormSt>
             </SearchbarSt>
         )
-    }
-
 }
 
 

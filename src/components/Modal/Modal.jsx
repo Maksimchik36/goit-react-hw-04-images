@@ -1,46 +1,44 @@
 import PropTypes from 'prop-types'; 
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { OverlaySt, ModalSt, ModalImageSt } from './Modal.styled';
 import { createPortal } from "react-dom";
   
 const modalRoot = document.querySelector('#modal-root')
 
 
-export default class Modal extends Component{
+const Modal = ({onClose, children}) => {
+  
   // добавляет слушателя для закрытия по escape
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
-  }
-
-  // снимает слушателя для закрытия по escape
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    //return in useEffect снимает слушателя для закрытия по escape
+    return () => { window.removeEventListener('keydown', handleKeyDown) }
+  })
 
   
-  // закрытие модалки по нажатию на escape
-  handleKeyDown = (e) => {
+  // закрывает модалку по нажатию на escape
+  const handleKeyDown = (e) => {
       if (e.code === 'Escape') {
-        this.props.onClose();
+        onClose();
       }
   }
 
-  // закрытие модалки по нажатию на backdrop
-  handleBackdropClick = (e) => {
+
+  // закрывает модалку по нажатию на backdrop
+  const handleBackdropClick = (e) => {
     if (e.currentTarget === e.target) {
-      this.props.onClose();
+      onClose();
     }
   }
   
 
-  render() {
     return createPortal(
-      <OverlaySt onClick={this.handleBackdropClick}>
+      <OverlaySt onClick={handleBackdropClick}>
         <ModalSt>
-              <ModalImageSt src={this.props.children} alt="Big image"></ModalImageSt>
+              <ModalImageSt src={children} alt="Big image"></ModalImageSt>
         </ModalSt>
 </OverlaySt>, modalRoot)
-  }
+  
 }
 
 
@@ -49,16 +47,4 @@ Modal.propTypes = {
 }
 
 
-// import { OverlaySt, ModalSt, ModalImageSt } from './Modal.styled';
-
-// const Modal = ({data, onClick}) => {
-//     return (
-//         <OverlaySt>
-//   <ModalSt>
-//     <ModalImageSt src={data} alt="Big image" onClick={onClick} />
-//   </ModalSt>
-// </OverlaySt>
-//     )
-// }
-
-// export default Modal;
+export default Modal;

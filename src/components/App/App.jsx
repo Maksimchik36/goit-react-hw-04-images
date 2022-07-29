@@ -1,130 +1,119 @@
-import { Component } from "react";
+import { useState, useEffect } from "react";
 import { Container } from "./App.styled";
 import Searchbar from "components/Searchbar";
 import ImageGallery from "components/ImageGallery";
 import Button from "components/Button";
 import Modal from "components/Modal";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-// import { BallTriangle } from 'react-loader-spinner';
 import Loader from "components/Loader";
 import ErrorMessage from '../ErrorMessage';
 import * as ImageService from '../../service/image-service';
 
-class App extends Component {
-  state = {
-    query: '',
-    images: [], 
-    page: 1,
-    isEmpty: false, // пустой ли массив получаем при запросе
-    isVisible: false, // видимость Button LoadMore
-    isLoading: false, // для визуализации загрузки - спинера
-    error: null, // сообщение об ошибке - в catch
-    isModalShown: false, // отображение модалки
-    largeImageURL: '', // картинка для модалки
-  };
+const App = () => {
+
+  const [query, setQuery] = useState('');
+  const [ourImages, setOurImages] = useState([]);
+  const [page, setPage] = useState(1);
+  const [isEmpty, setIsEmpty] = useState(false); // пустой ли массив получаем при запросе
+  const [isVisible, setIsVisible] = useState(false); // видимость Button LoadMore
+  const [isLoading, setIsLoading] = useState(false); // для визуализации загрузки - спинера
+  const [error, setError] = useState(null); // сообщение об ошибке - в catch
+  const [isModalShown, setIsModalShown] = useState(false); // отображение модалки
+  const [largeImageURL, setLargeImageURL] = useState(''); // картинка для модалки
 
 
-  // componentDidUpdate(prevProps, prevState) - если один из параметровне исп-ем, пишем символ "_", чтобы валидатор не ругался
-  componentDidUpdate(_, prevState){
-    const {query, page, } = this.state;
-    
-    if (prevState.query !== query || prevState.page !== page) {
-      this.getPhotos(query, page);
-    }
-  }
+  // при изменении query или page обновляет коллекцию элементов
+  useEffect(() => {getPhotos(query, page) }, [query, page]);
 
 
-  // получение коллекции элементов
-  getPhotos = async (query, page) => {
+  // получает коллекцию элементов
+  const getPhotos = async (query, page) => {
     if(!query){
          return ;
     }
     // начало загрузки
-    this.setState({isLoading:true})
+    setIsLoading(true)
 
     try {
       const {totalHits, hits}  = await ImageService.getImages(query, page);
       
       if (hits.length === 0) {
-        this.setState({ isEmpty: true,
-          query:'',
-         });
+        setIsEmpty(true);
+        setQuery('');
         return;
       }
-      
-      this.setState(prevState => ({
-        images: [...prevState.images, ...hits],
-        isVisible: Math.ceil(totalHits/hits.length) > page,
-        }))      
+          
+      setOurImages(prev => [...prev, ...hits])
+      setIsVisible(Math.ceil(totalHits/hits.length) > page)
     }
     catch (error) {
-      this.setState({error: error})
+      setError(error);
     }
     finally {
       // завершение загрузки
-      this.setState({isLoading:false})
+      setIsLoading(false);
     }
   }
 
+
   // перезаписывает значение query в state (App)
-  onSubmit = (query) => {
-    this.setState({
-      query,
-      images:[],
-      page: 1,
-      isEmpty: false,
-      isVisible: false,
-      })
+  const onSubmit = (query) => {
+      setQuery(query);
+      setOurImages([]);
+      setPage(1);
+      setIsEmpty(false);
+      setIsVisible(false);
   }
+
 
   // при нажатии на кнопку значение текущей страницы увеличивается
-  onLoadMoreBtnClick = () => {
-   this.setState(prevState => ({page: prevState.page + 1}))    
+  const onLoadMoreBtnClick = () => {
+    setPage(prev => prev + 1)
   }
 
-  // при нажатии на картинку записывает в state webformatURL значение свойства элемента webformatURL   
-  onImageClick = (e) => {
+
+  // при нажатии на картинку записывает в webformatURL значение свойства элемента webformatURL   
+  const onImageClick = (e) => {
     const selectedImageSrc = e.target.src;
-    const {images} = this.state;
-    const selectedImage = images.find(el=>el.webformatURL === selectedImageSrc);
-    this.setState({
-      largeImageURL: selectedImage.largeImageURL,
-      isModalShown: true,
-    })
+    const selectedImage = ourImages.find(el => el.webformatURL === selectedImageSrc);
+    setLargeImageURL(selectedImage.largeImageURL);
+    setIsModalShown(true);
  }
 
-  // записывает значение isModalShown: false в state, благодаря чему будет закрываться модалка
-  onModalClose = () => {
-    this.setState( {isModalShown: false})
+  
+  // записывает значение isModalShown false , благодаря чему будет закрываться модалка
+  const onModalClose = () => {
+    setIsModalShown(false)
  }
 
-  render() {
-    const { isEmpty, images, isVisible, error, isLoading, largeImageURL, isModalShown } = this.state;
+  
+    // ссылки на картинки для ошибок
     const EmptyLink="https://www.meme-arsenal.com/memes/6701390fa09401b5b6a3cdb3b90ce39e.jpg";
     const ImageError = "https://static6.depositphotos.com/1026266/543/i/600/depositphotos_5437053-stock-photo-woman-pressing-modern-error-button.jpg";
 
+  
+  
     return (
       <Container>        
-        <Searchbar onSubmit={this.onSubmit}> </Searchbar>
+        <Searchbar onSubmit={onSubmit}> </Searchbar>
         
         {isEmpty && <ErrorMessage text="Sorry. There are no images ... 😭" link={EmptyLink}></ErrorMessage>}
         
         {error && <ErrorMessage text="❌ Something went wrong ..." link={ImageError} ></ErrorMessage>}
         
         <ImageGallery
-            onClick={this.onImageClick}
-            images={images}>         
+            onClick={onImageClick}
+            images={ourImages}>         
         </ImageGallery>
         
-        {isVisible && <Button type ="button" message="Load More" onClick={this.onLoadMoreBtnClick}></Button>}
+        {isVisible && <Button type ="button" message="Load More" onClick={onLoadMoreBtnClick}></Button>}
         
         {isLoading && <Loader/>}
 
-        {largeImageURL && isModalShown && <Modal onClose={this.onModalClose} >{largeImageURL}</Modal>}
+        {largeImageURL && isModalShown && <Modal onClose={onModalClose} >{largeImageURL}</Modal>}
         
       </Container>
-  );
-  }
+  )
 };
 
 
